@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Tweet Collector",
+  "version": "1.0",
+
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+
+  "host_permissions": [
+    "https://x.com/*",
+    "http://localhost/*"
+  ],
+
+  "action": {
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["https://x.com/*"]
+    }
+  ]
+}

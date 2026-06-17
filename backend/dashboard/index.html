@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viral Tweet Intelligence Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>Antigravity</h1>
+          <span>Tweet Collector</span>
+        </div>
+      </div>
+
+      <!-- KPI SECTION -->
+      <div class="kpi-section">
+        <h3>System Metrics</h3>
+        <div class="kpis">
+          <div class="kpi-card" id="kpi-total">
+            <span class="kpi-label">Total Saved</span>
+            <span class="kpi-value">-</span>
+          </div>
+          <div class="kpi-card" id="kpi-avg-engagement">
+            <span class="kpi-label">Avg Engagement</span>
+            <span class="kpi-value">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filter-section">
+        <h3>Filter & Sort</h3>
+        
+        <div class="form-group">
+          <label for="filter-pattern">Category Pattern</label>
+          <select id="filter-pattern">
+            <option value="All">All Categories</option>
+            <option value="contrarian_take">Contrarian Take</option>
+            <option value="personal_story">Personal Story</option>
+            <option value="build_in_public">Build in Public</option>
+            <option value="data_shock">Data/Stat Shock</option>
+            <option value="prediction">Prediction</option>
+            <option value="callout">Callout/Critique</option>
+            <option value="listicle">Listicle/Thread</option>
+            <option value="observation">Simple Observation</option>
+            <option value="Unclassified">Unclassified</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="sort-by">Sort By</label>
+          <select id="sort-by">
+            <option value="newest">Newest Saved</option>
+            <option value="engagement">Engagement Rate</option>
+            <option value="likes">Likes</option>
+            <option value="reposts">Reposts</option>
+            <option value="views">Views</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TWEET BUILDER (RAG) -->
+      <div class="generator-section">
+        <h3>AI Tweet Generator</h3>
+        <p class="generator-desc">Select examples manually OR pick a copywriting template below to auto-find structure matches.</p>
+        
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label for="gen-pattern">Pattern Template</label>
+          <select id="gen-pattern">
+            <option value="auto">Auto-detect (Recommended)</option>
+            <option value="contrarian_take">Contrarian Take</option>
+            <option value="personal_story">Personal Story</option>
+            <option value="build_in_public">Build in Public</option>
+            <option value="data_shock">Data/Stat Shock</option>
+            <option value="prediction">Prediction</option>
+            <option value="callout">Callout/Critique</option>
+            <option value="listicle">Listicle/Thread</option>
+            <option value="observation">Simple Observation</option>
+          </select>
+        </div>
+
+        <div class="selected-counter">
+          Or Manual Examples: <strong id="selected-count">0</strong>
+        </div>
+
+        <div class="form-group">
+          <label for="gen-topic">New Topic / Idea</label>
+          <textarea id="gen-topic" placeholder="e.g. A new AI coding agent that runs locally in the terminal..."></textarea>
+        </div>
+
+        <button id="btn-generate" disabled>Generate Viral Tweet</button>
+
+        <div class="generator-output" id="gen-output-container" style="display: none;">
+          <label>Generated Copy</label>
+          <div class="output-box" id="gen-output-text"></div>
+          <button class="btn-copy" id="btn-copy-tweet">Copy to Clipboard</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      
+      <!-- TOP NAVIGATION / SEARCH -->
+      <header class="header">
+        <div class="search-bar-container">
+          <div class="search-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="none" stroke="currentColor" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-input" placeholder="Search saved tweets by keyword...">
+          <button id="btn-semantic-search" class="btn-secondary">Semantic Search</button>
+        </div>
+        <div class="api-status">
+          <div class="status-indicator online"></div>
+          <span>Database Connected</span>
+        </div>
+      </header>
+
+      <!-- RESULTS PANEL -->
+      <section class="results-panel">
+        <div class="results-header">
+          <h2 id="results-title">Saved Tweets</h2>
+          <span class="results-count" id="results-count">0 tweets</span>
+        </div>
+
+        <div class="tweets-grid" id="tweets-grid">
+          <!-- Dynamically loaded tweet cards -->
+          <div class="loader-container">
+            <div class="loader"></div>
+            <span>Querying DB...</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
